@@ -1,0 +1,104 @@
+
+<!-- debut table -->
+  
+<div *ngIf="!selectedIngredients">
+    <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="creationIngredient()" color="primary">Nouveau Ingredient</button>
+        </div>
+      </section>
+<input  (keyup)="applyFilter($event)" placeholder="RECHERCHER" >
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.id}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef> nom </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.nom}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="unite">
+      <th mat-header-cell *matHeaderCellDef> unite </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.unite}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="stock">
+      <th mat-header-cell *matHeaderCellDef> stock </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.stock}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons 
+    aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>
+
+  <!-- FIN table -->
+  
+  <div *ngIf="selectedIngredients">
+  
+    <h2 *ngIf="isAdd">{{selectedIngredients.name | uppercase}} Creation Ingredient</h2>
+    <h2 *ngIf="isModif">{{selectedIngredients.name | uppercase}} Detail Ingredient</h2>
+    
+
+     
+      <input matInput [(ngModel)]="selectedIngredients.id" hidden>
+      <mat-form-field appearance="fill">
+      <mat-label>Nom de l'ingredient</mat-label>
+        <input matInput id="ingredients-name" [(ngModel)]="selectedIngredients.nom" required placeholder="nom">
+      </mat-form-field>
+
+     
+
+      <mat-form-field appearance="fill">
+      <mat-label>Quantiter en Stock</mat-label>
+        <input matInput type="number" id="ingredients-name" [(ngModel)]="selectedIngredients.stock" required placeholder="unite">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>unite de l'ingredient</mat-label>
+          <input matInput id="ingredients-name" [(ngModel)]="selectedIngredients.unite" required placeholder="unite">
+        </mat-form-field>
+
+      <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="annulModif()" color="warn">Annuler</button>
+          <ng-container *ngIf="isAdd">
+            <button mat-raised-button (click)="enregistrementIngredient()" color="primary">valider</button>
+          </ng-container>
+          <ng-container *ngIf="isModif">
+            <button mat-raised-button (click)="modificationIngredient()" color="primary">valider</button>
+          </ng-container>
+         
+        </div>
+      </section>
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Select</mat-label>
+        <mat-select>
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field> -->
+  
+  </div>

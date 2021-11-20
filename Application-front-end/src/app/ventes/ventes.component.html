@@ -1,0 +1,173 @@
+
+<!-- debut table -->
+  
+<div *ngIf="!selectedVentes">
+    <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="creationVente()" color="primary">Nouvelle Vente</button>
+        </div>
+      </section>
+<input  (keyup)="applyFilter($event)" placeholder="RECHERCHER" >
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> id </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.id}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="repasId">
+      <th mat-header-cell *matHeaderCellDef> Nom du repas </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.nom}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="quantite">
+      <th mat-header-cell *matHeaderCellDef> quantite </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.quantite}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="prix">
+      <th mat-header-cell *matHeaderCellDef> prix de vente</th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.prix}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="benefice">
+        <th mat-header-cell *matHeaderCellDef> benefice </th>
+        <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.prix - (element.prixAchat * element.quantite)}} </td>
+      </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons 
+    aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>
+
+  <!-- FIN table -->
+  
+  <div *ngIf="selectedVentes">
+  
+    <h2 *ngIf="!isAdd">{{selectedVentes.name | uppercase}} Vente Details</h2>
+    <h2 *ngIf="isAdd">{{selectedVentes.name | uppercase}} Creation commande Vente</h2>
+
+     
+      <input matInput [(ngModel)]="selectedVentes.id" hidden>
+      <!-- <mat-form-field appearance="fill">
+      <mat-label>Nom du repas</mat-label>
+        <input matInput id="ventes-name" [(ngModel)]="selectedVentes.repasId" required placeholder="repasId">
+      </mat-form-field> -->
+      <mat-form-field appearance="fill">
+        <mat-label>Selectionner un repa</mat-label>
+        <mat-select [(ngModel)]="selectedVentes.repasId" (ngModelChange)="repasNgmodelchange($event)" name="repa">
+            <mat-option *ngFor="let repa of toutRepas" [value]="repa.id">
+                {{repa.nom}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+     
+
+      <mat-form-field appearance="fill">
+      <mat-label>Quantite vendu</mat-label>
+        <input matInput type="number" id="ventes-quantite" [(ngModel)]="selectedVentes.quantite" (ngModelChange)="quantiteNgmodelchange($event)" required placeholder="quantite">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>prix de vente</mat-label>
+          <input matInput type="number"  id="ventes-prix" [(ngModel)]="selectedVentes.prix" required placeholder="prix">
+        </mat-form-field>
+       
+        <section class="example-section">
+            <mat-checkbox matInput class="example-margin" (ngModelChange)="emballages($event)" name="emballages" [(ngModel)]="selectedVentes.emballages">emballages</mat-checkbox>
+            <mat-checkbox matInput class="example-margin"  (ngModelChange)="serviettes($event)" name="serviettes" [(ngModel)]="selectedVentes.serviettes">serviettes</mat-checkbox>
+            <mat-checkbox matInput class="example-margin" (ngModelChange)="couvert($event)" name="couvert" [(ngModel)]="selectedVentes.couvert">couvert</mat-checkbox>
+          </section>
+      
+        <mat-chip-list aria-label="Fish selection">
+            <mat-chip color="accent" *ngFor="let menu of listMenus" (click)="openModal(mytemplate,menu.menuId,menu.quantite)">{{menu.quantite * multipe}} {{menu.nom}}</mat-chip>
+        </mat-chip-list>
+
+
+      <section>
+        
+        <div class="example-button-row">
+           <ng-container *ngIf="!isAdd">
+            <button mat-raised-button (click)="annulModif()" color="warn">Retour</button>
+           </ng-container>
+          <ng-container *ngIf="isAdd">
+            <button mat-raised-button (click)="annulModif()" color="warn">Annuler</button>
+          
+            <button mat-raised-button (click)="openModal(mytemplate)" color="primary">valider</button>
+          </ng-container>
+          <!-- <ng-container *ngIf="isModif ">
+            <button mat-raised-button (click)="modificationVente()" color="primary">valider</button>
+          </ng-container> -->
+         
+        </div>
+      </section>
+      <mat-grid-list cols="1" rowHeight="500px">
+        <mat-grid-tile >
+
+            <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+              
+                <!-- Position Column -->
+                <ng-container matColumnDef="nom">
+                  <th mat-header-cell *matHeaderCellDef> nom </th>
+                  <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.nom}} </td>
+                </ng-container>
+              
+                <!-- Name Column -->
+                <ng-container matColumnDef="quantite">
+                  <th mat-header-cell *matHeaderCellDef> quantite </th>
+                  <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.quantite * multipe}} {{element.unite}} </td>
+                </ng-container>
+              
+                <!-- Weight Column -->
+                <ng-container matColumnDef="stock">
+                  <th mat-header-cell *matHeaderCellDef> stock </th>
+                  <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.stock}}  {{element.unite}}</td>
+                </ng-container>
+              
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="prix">
+                  <th mat-header-cell *matHeaderCellDef> Reste/Manque </th>
+                  <td mat-cell *matCellDef="let element" (click)="onSelect(element)" [style.background-color]="(element.stock - (element.quantite * multipe)) > 0 ? 'turquoise': 'purple'"> {{element.stock - (element.quantite * multipe)}} {{element.unite}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns2;" ></tr>
+              </table>
+        </mat-grid-tile>
+        
+      </mat-grid-list>
+
+      <ng-template #mytemplate>
+        <h1 mat-dialog-title>Validation Vente</h1>
+        <div mat-dialog-content>
+          <p> Repas: {{nomRepasSelected}}  </p>
+          <p> Prix {{selectedVentes.prix}} </p>
+          <p> Quantite {{selectedVentes.quantite}}</p>
+          
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button [mat-dialog-close] cdkFocusInitial>Annuler</button>
+            <button mat-button (click)="enregistrementVente()"  [mat-dialog-close]>Valider</button>
+          
+        </div>
+      </ng-template>
+  
+  </div>

@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Composant Repas</h1>
+<div mat-dialog-content>
+  <p>Selectionner un Menus</p>
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Liste des Meus</mat-label>
+    <mat-select [(ngModel)]="menuSelected" name="menu">
+        <mat-option *ngFor="let Menu of arryMenu" [value]="Menu.id">
+            {{Menu.nom}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <p>Quantiter necessaire</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Quantite</mat-label>
+    <input type="number" matInput [(ngModel)]="quantiteSelected">
+    
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close] cdkFocusInitial>Fermer</button>
+    <button mat-button (click)="onValidate(menuSelected,quantiteSelected)"  [mat-dialog-close]>Valider</button>
+  
+</div>

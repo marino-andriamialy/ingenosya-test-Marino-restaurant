@@ -1,0 +1,102 @@
+
+<!-- debut table -->
+  
+<div *ngIf="!selectedMenus">
+    <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="creationMenu()" color="primary">Nouveau Menu</button>
+        </div>
+      </section>
+<input  (keyup)="applyFilter($event)" placeholder="RECHERCHER" >
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.id}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef> nom </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.nom}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="prixUnitaire">
+      <th mat-header-cell *matHeaderCellDef> prix unitaire </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.prixUnitaire}} </td>
+    </ng-container>
+
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons 
+    aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>
+
+  <!-- FIN table -->
+  
+  <div *ngIf="selectedMenus">
+  
+    <h2 *ngIf="isAdd">{{selectedMenus.name | uppercase}} Creation Menu</h2>
+    <h2 *ngIf="!isAdd">{{selectedMenus.name | uppercase}} Details Menu</h2>
+    
+
+     
+      <input matInput [(ngModel)]="selectedMenus.id" hidden>
+      <mat-form-field appearance="fill">
+      <mat-label>Nom du menu</mat-label>
+        <input matInput id="menus-name" [(ngModel)]="selectedMenus.nom" required placeholder="nom">
+      </mat-form-field>
+
+     
+
+      <mat-form-field appearance="fill">
+      <mat-label>prix_unitaire</mat-label>
+        <input matInput type="number" id="prixUnitaire" [(ngModel)]="selectedMenus.prixUnitaire" required placeholder="prix_unitaire">
+      </mat-form-field>
+
+      <mat-chip-list aria-label="Fish selection">
+        <mat-chip color="accent" *ngFor="let ingredient of listIngredients" (click)="openModal(mytemplate,ingredient.ingredientId,ingredient.quantite)">{{ingredient.quantite}} {{ingredient.unite}} {{ingredient.nom}}</mat-chip>
+      </mat-chip-list>
+
+      <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="annulModif()" color="warn">Annuler</button>
+          <ng-container *ngIf="isAdd">
+            <button mat-raised-button (click)="enregistrementMenu()" color="primary">valider</button>
+          </ng-container>
+          <ng-container *ngIf="isModif">
+            <button mat-raised-button (click)="modificationMenu()" color="primary">valider</button>
+          </ng-container>
+          <!-- <button mat-button (click)="openDialog()">Ajouter un ingredient</button> -->
+          <button mat-raised-button (click)="openModal(mytemplate,0,0)" color="warn">Ajouter un ingredient</button>
+        </div>
+      </section>
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Select</mat-label>
+        <mat-select>
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field> -->
+      <ng-template #mytemplate>
+        <app-dialog (newItemEvent)="addItem($event)" [Ingredients]="AllIngredients" [selcectedItem]="Item" ></app-dialog>
+      </ng-template>
+  
+  </div>

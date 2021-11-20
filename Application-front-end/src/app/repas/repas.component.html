@@ -1,0 +1,104 @@
+
+<!-- debut table -->
+  
+<div *ngIf="!selectedRepas">
+    <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="creationRepa()" color="primary">Nouveau Repa</button>
+        </div>
+      </section>
+<input  (keyup)="applyFilter($event)" placeholder="RECHERCHER" >
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.id}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef> nom </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.nom}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="prix">
+      <th mat-header-cell *matHeaderCellDef> Prix </th>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element)"> {{element.prix}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+   
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons 
+    aria-label="Select page of periodic elements">
+  </mat-paginator>
+</div>
+
+  <!-- FIN table -->
+  
+  <div *ngIf="selectedRepas">
+  
+    <h2 *ngIf="isAdd">{{selectedRepas.name | uppercase}} Creation nouveau Repa</h2>
+    <h2 *ngIf="!isAdd">{{selectedRepas.name | uppercase}} Detail Repa</h2>
+    
+
+     
+      <input matInput [(ngModel)]="selectedRepas.id" hidden>
+      <mat-form-field appearance="fill">
+      <mat-label>Nom du repa</mat-label>
+        <input matInput id="repas-name" [(ngModel)]="selectedRepas.nom" required placeholder="nom">
+      </mat-form-field>
+
+     
+
+      <mat-form-field appearance="fill">
+      <mat-label>Prix unitaire</mat-label>
+        <input matInput type="number" id="repas-prix" [(ngModel)]="selectedRepas.prix" required placeholder="unite">
+      </mat-form-field>
+
+
+      <mat-chip-list aria-label="Fish selection">
+        <mat-chip color="accent" *ngFor="let menu of listMenus" (click)="openModal(mytemplate,menu.menuId,menu.quantite)">{{menu.quantite}} {{menu.nom}}</mat-chip>
+      </mat-chip-list>
+
+      <section>
+        
+        <div class="example-button-row">
+          <button mat-raised-button (click)="annulModif()" color="warn">Annuler</button>
+          <ng-container *ngIf="isAdd">
+            <button mat-raised-button (click)="enregistrementRepa()" color="primary">valider</button>
+          </ng-container>
+          <ng-container *ngIf="isModif">
+            <button mat-raised-button (click)="modificationRepa()" color="primary">valider</button>
+          </ng-container>
+          <button mat-raised-button (click)="openModal(mytemplate,0,0)" color="warn">Ajouter un menu</button>
+        </div>
+      </section>
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Select</mat-label>
+        <mat-select>
+          <mat-option value="one">First option</mat-option>
+          <mat-option value="two">Second option</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field> -->
+      <ng-template #mytemplate>
+        <app-dialog-repas (newItemEvent)="addItem($event)" [Menus]="AllMenus" [selcectedItem]="Item" ></app-dialog-repas>
+      </ng-template>
+  
+  </div>
