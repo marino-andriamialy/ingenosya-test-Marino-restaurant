@@ -13,7 +13,7 @@ https://gmanier.com/memo/3/le-crud-sous-symfony-4
 
 -pre requis
 ===========
-php 7.3
+php 7.4
 Mysql 5.7
 Apache
 composer
@@ -29,6 +29,17 @@ etapes pour installer
 executer la commande
 ======================
  composer install
+ 
+ ///////////////////EN CAS ERREUR composer/////////////////////
+ si l'install composer echoue pour quelque raison que ce soit 
+ -supprimet le vossier vendor et le fichier composer.lock
+ lancer lacommande 
+ composer dump-autoload -o && php bin/console c:c
+ 
+ extracter le contenu de l'archive vendor.zip
+ 
+ecraser les fichier existants'il le demande
+ 
 
 
 base de donnee
